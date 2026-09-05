@@ -1,0 +1,4 @@
+# Gestionado inicialmente por macos_setup. LazyDocker ejecutará Podman en vez de Docker.
+commandTemplates:
+  docker: podman
+  dockerCompose: podman compose
