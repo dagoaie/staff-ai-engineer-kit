@@ -1,0 +1,6 @@
+interface:
+  display_name: "Harden Change"
+  short_description: "Verify an implemented OpenSpec change before shipping"
+  default_prompt: "Use $harden-change to verify the implemented OpenSpec change <change> in this repository."
+policy:
+  allow_implicit_invocation: false

@@ -15,6 +15,7 @@ Una skill escala criterio; un MCP escala capacidad y superficie de riesgo. Nunca
 
 - [Skills](skills/skills-for-real-engineers.md): colección instalada de forma interactiva por el bootstrap.
 - [Prepare Change](skills/prepare-change.md): puente explícito de `review` y `/grill-with-docs` a un cambio OpenSpec implementable.
+- [Harden Change](skills/harden-change.md): gate explícito de tests, validación y review para un cambio ya implementado.
 - [Plantilla de ficha de skill](skills/skill-card-template.md)
 - [Plantilla de ficha MCP](mcp/mcp-server-card-template.md)
 

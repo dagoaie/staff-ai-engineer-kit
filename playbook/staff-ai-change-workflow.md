@@ -100,6 +100,12 @@ convoy --change <cambio> --pipeline implement \
 
 La revisión es de solo lectura: no arregla código. Conserva el mismo contrato y adjuntos que guiaron la implementación.
 
+Para aplicar el gate completo desde OpenCode sin corregir ni publicar, invoca la skill local:
+
+```text
+/harden-change Verifica el cambio OpenSpec <cambio> ya implementado en este repositorio. No modifiques código ni ejecutes ship.
+```
+
 Este comando genera un informe y un score sobre el diff actual; `convoy runs` permite abrir después esa ejecución y sus artefactos:
 
 ```sh

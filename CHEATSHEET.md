@@ -114,8 +114,9 @@ Para cambios AI relevantes, ejecuta también `openspec validate --help` para ele
 | `/tdd` | Aplica el ciclo red-green-refactor para una funcionalidad o corrección. |
 | `/to-issues` | Convierte un plan, PRD o especificación en issues independientes y ejecutables. |
 | `/prepare-change` | Convierte un review y un grill cerrados en un cambio OpenSpec listo para planificar, sin implementar código. |
+| `/harden-change` | Ejecuta tests, validación y review de Convoy para un cambio OpenSpec implementado, sin corregirlo ni publicarlo. |
 
-Las invocaciones de Matt Pocock aparecen solo si fueron seleccionadas durante la instalación de [Skills for Real Engineers](catalog/agent-extensions/skills/skills-for-real-engineers.md). Para instalar o actualizar esa colección: `npx skills@latest add mattpocock/skills`. La skill local [`/prepare-change`](catalog/agent-extensions/skills/prepare-change.md) se instala por separado en OpenCode.
+Las invocaciones de Matt Pocock aparecen solo si fueron seleccionadas durante la instalación de [Skills for Real Engineers](catalog/agent-extensions/skills/skills-for-real-engineers.md). Para instalar o actualizar esa colección: `npx skills@latest add mattpocock/skills`. Las skills locales [`/prepare-change`](catalog/agent-extensions/skills/prepare-change.md) y [`/harden-change`](catalog/agent-extensions/skills/harden-change.md) se instalan por separado en OpenCode.
 
 ## Agentes de código
 
