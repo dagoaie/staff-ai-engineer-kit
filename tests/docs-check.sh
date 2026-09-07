@@ -6,7 +6,7 @@ readonly ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 missing_links="$({
-  rg -n '\]\(([^:)#]+\.md)' README.md catalog playbook | perl -ne '
+  rg -n '\]\(([^:)#]+\.md)' README.md CHEATSHEET.md catalog playbook | perl -ne '
     if (/^([^:]+):\d+:.*\]\(([^)#]+\.md)/) {
       $path = $2;
       next if $path =~ m!^https?://!;
@@ -28,9 +28,9 @@ fi
 printf '✓ Enlaces Markdown locales válidos.\n'
 
 if command -v markdownlint-cli2 >/dev/null 2>&1; then
-  markdownlint-cli2 "README.md" "catalog/**/*.md" "playbook/**/*.md"
+  markdownlint-cli2 "README.md" "CHEATSHEET.md" "catalog/**/*.md" "playbook/**/*.md"
 fi
 
 if command -v lychee >/dev/null 2>&1; then
-  lychee README.md 'catalog/**/*.md' 'playbook/**/*.md'
+  lychee README.md CHEATSHEET.md 'catalog/**/*.md' 'playbook/**/*.md'
 fi

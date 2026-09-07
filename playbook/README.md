@@ -35,6 +35,7 @@ Antes de crear un documento, consulta la [matriz de decisión documental](docume
 - [Ficha de modelo](templates/model-card-template.md)
 - [Ficha de datos](templates/data-card-template.md)
 - [Workflow OpenSpec para cambios AI](openspec-ai-change-workflow.md)
+- [Workflow de cambio Staff AI](staff-ai-change-workflow.md): fases para combinar especificación, skills, Convoy y gates humanos.
 
 ## Herramientas del bootstrap que lo soportan
 

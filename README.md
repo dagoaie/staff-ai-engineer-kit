@@ -2,6 +2,8 @@
 
 Kit personal para un Staff AI Engineer: bootstrap reproducible de macOS, catálogo de herramientas y playbook de prácticas AI. El bootstrap es **idempotente**: se puede volver a ejecutar y solo instala lo que falta o actualiza las herramientas gestionadas por `uv`.
 
+Para los comandos más habituales, consulta la [cheatsheet](CHEATSHEET.md).
+
 ## Mapa del kit
 
 - [`bootstrap/`](bootstrap/): prepara el Mac y contiene el inventario instalable.
