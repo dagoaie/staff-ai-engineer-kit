@@ -1,0 +1,6 @@
+interface:
+  display_name: "Prepare Change"
+  short_description: "Turn reviewed decisions into an OpenSpec plan"
+  default_prompt: "Use $prepare-change to turn the completed review and grill conclusions into an implementable OpenSpec change."
+policy:
+  allow_implicit_invocation: false
