@@ -9,12 +9,15 @@ OpenSpec es el mecanismo de entrega, no un repositorio paralelo de estrategia. S
 ## Secuencia
 
 ```text
-PRD/RFC/ADR (si aplica)
-  → openspec proposal
-    → specs + design
-      → tasks → implementación
-        → evaluación, rollout y archivo
+investigación del comportamiento actual
+  → /grill-with-docs y decisiones/ADR (si aplica)
+    → openspec proposal
+      → specs + design
+        → tasks → implementación
+          → evaluación, rollout y archivo
 ```
+
+El *grill* precede al bundle OpenSpec definitivo para que el dominio, los ADRs y la documentación existente definan su alcance. Puede crearse un borrador temprano para ordenar la conversación, pero no se valida ni se usa como contrato de implementación hasta cerrar las decisiones relevantes.
 
 ## Contenido mínimo por artefacto
 

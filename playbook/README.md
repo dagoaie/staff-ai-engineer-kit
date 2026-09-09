@@ -34,6 +34,8 @@ Antes de crear un documento, consulta la [matriz de decisión documental](docume
 - [LLD](templates/lld-template.md)
 - [Ficha de modelo](templates/model-card-template.md)
 - [Ficha de datos](templates/data-card-template.md)
+- [Fix brief](templates/fix-brief-template.md): puente versionado entre hallazgos aceptados de una review y `convoy --pipeline fixer`.
+- [Runbook de cambio Jira](templates/jira-change-runbook-template.md): guía copy-paste desde el ticket hasta la PR/MR.
 - [Workflow OpenSpec para cambios AI](openspec-ai-change-workflow.md)
 - [Workflow de cambio Staff AI](staff-ai-change-workflow.md): fases para combinar especificación, skills, Convoy y gates humanos.
 
