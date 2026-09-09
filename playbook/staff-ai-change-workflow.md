@@ -8,11 +8,30 @@ Este workflow usa las skills de Matt Pocock para aclarar decisiones y Convoy par
 - Escala el rigor según impacto en usuario, seguridad, datos, coste o reversibilidad.
 - Convoy automatiza trabajo repetible, pero no sustituye los juicios de alcance, riesgo y aceptación.
 - Un hallazgo no se corrige automáticamente: primero se demuestra, se prioriza y se acepta.
+- El *grill* ocurre antes de escribir el bundle OpenSpec definitivo: las conclusiones del dominio son una entrada de la especificación, no una corrección posterior.
+
+## Ruta canónica
+
+Usa esta ruta para cambios AI, transversales o difíciles de revertir. Los cambios mecánicos y reversibles pueden seguir la ruta mínima de [selección rápida](#selección-rápida).
+
+```text
+worktree aislado
+  → investigar y /grill-with-docs
+    → /prepare-change y OpenSpec validado
+      → convoy implement --plan → implement
+        → tests/evaluaciones → convoy review
+          → triage humano y fix brief, si aplica
+            → convoy fixer --plan → fixer → review de nuevo, si aplica
+              → convoy ship → PR/MR y aprobación humana
+```
+
+`implement` y `review` son nombres de perfiles de ejemplo. Un repositorio puede usar perfiles como `implement-gpt` y `review-gpt`, pero debe usar los mismos perfiles de forma consistente y documentar qué garantías adicionales ofrecen. El contrato entre fases sigue siendo `--change <cambio>`.
 
 ## Fases
 
 | Fase | Entrada | Trabajo | Gate | Salida |
 | --- | --- | --- | --- | --- |
+| 0. Espacio aislado | Rama base conocida | Crea un worktree con `wt`; confirma rama y árbol antes de alterar el repositorio. | No se trabaja sobre la rama por defecto ni hay cambios ajenos sin identificar. | Worktree y rama de trabajo. |
 | 1. Encuadre | Problema, señales y contexto técnico | Investiga el sistema; usa `/grill-with-docs` para contrastar el cambio con el dominio y decisiones existentes. Usa `/grill-me` si quedan alternativas o supuestos importantes. | Objetivo, no-objetivos, riesgos y owner claros. | Nota de decisión, ADR o actualización de `CONTEXT.md`, según corresponda. |
 | 2. Especificación | Encuadre acordado | Redacta PRD o RFC proporcional; para cambios AI relevantes crea y valida artefactos OpenSpec. Define comportamiento observable y criterios de aceptación. | Alcance, datos, seguridad, evaluación, coste y rollback están cubiertos en proporción al riesgo. | PRD/RFC/OpenSpec listo para implementar. |
 | 3. Implementación | Especificación y criterios de aceptación | Ejecuta `convoy -p implement` para una feature, o implementa un cambio pequeño con `/tdd`. Revisa los commits y el resumen de cada fase. | El cambio cumple la especificación y los tests/evaluaciones relevantes pasan. | Rama implementada con evidencia de pruebas. |
@@ -29,7 +48,20 @@ Cuando el repositorio usa OpenSpec, `--change <cambio>` es el contrato estable e
 
 Usa `--file` solo para contexto adicional que no pertenezca al bundle OpenSpec: ADRs, fixtures, scorecards o una evaluación concreta. Cada ejecución conserva por separado sus informes privados bajo `~/.convoy/runs/<run-id>/reports/`; un informe de `review` no se convierte automáticamente en la orden de un `fixer` posterior.
 
-El puente es un *fix brief* versionado, por ejemplo `docs/reviews/<cambio>-fix-brief.md`. Tras la review, pulsa `i` y pide a OpenCode que lea el spec y los informes, clasifique los hallazgos y redacte ese brief con **solo** los aceptados. Cada entrada debe incluir evidencia, comportamiento esperado, prueba de regresión requerida, alcance permitido y no-objetivos.
+El puente es un [*fix brief*](templates/fix-brief-template.md) versionado, por ejemplo `docs/reviews/<cambio>-fix-brief.md`. Tras la review, pulsa `i` y pide a OpenCode que lea el spec y los informes, clasifique los hallazgos y redacte ese brief con **solo** los aceptados. Cada entrada debe incluir evidencia, comportamiento esperado, prueba de regresión requerida, alcance permitido y no-objetivos.
+
+### 0. Espacio aislado
+
+Trabaja en una rama aislada; ajusta el nombre a la convención del repositorio e incluye el identificador del ticket cuando exista:
+
+```sh
+# Crea y activa un worktree gestionado por worktrunk.
+wt switch --create <tipo>/<ticket>-<cambio>
+# Verifica la rama, el árbol y los worktrees antes de empezar a modificar código.
+git branch --show-current
+git status --short
+wt list
+```
 
 ### 1. Encuadre
 
@@ -71,6 +103,14 @@ openspec validate --help
 ```
 
 Completa los artefactos de `openspec/changes/<cambio>/` y enlaza los ADR, scorecard de evaluación, presupuesto de coste/latencia o límites MCP que apliquen. Antes de implementar, comprueba que la propuesta expresa qué debe ocurrir y cómo se medirá, no solo una lista de tareas.
+
+Cuando la investigación y el *grill* ya estén cerrados, prefiere la skill local para crear o completar el bundle con esas conclusiones:
+
+```text
+/prepare-change Usa las conclusiones de /grill-with-docs para preparar el cambio OpenSpec <cambio>. Lee los ADRs y la documentación citada; deja explícitos decisiones, bloqueos, criterios de aceptación, pruebas o evaluaciones y rollback. No implementes código ni ejecutes Convoy.
+```
+
+`/prepare-change` sustituye la redacción manual de los artefactos, no el gate de revisarlos y validarlos antes de implementar.
 
 ### 3. Implementación
 
@@ -117,7 +157,13 @@ convoy --change <cambio> --pipeline review \
 convoy runs
 ```
 
-En el dashboard de la ejecución, pulsa `i` para abrir OpenCode con el PRD y los informes como contexto. Reproduce los hallazgos que parezcan bloqueantes y crea `docs/reviews/<cambio>-fix-brief.md` con los aceptados. Un informe de Convoy es evidencia para decidir; no es una orden de modificar el diff.
+En el dashboard de la ejecución, pulsa `i` para abrir OpenCode con el PRD y los informes como contexto. Reproduce los hallazgos que parezcan bloqueantes y crea `docs/reviews/<cambio>-fix-brief.md` a partir de la [plantilla](templates/fix-brief-template.md), con solo los aceptados:
+
+```text
+Lee el bundle OpenSpec del cambio <cambio> y los informes de esta ejecución de review. Reproduce los hallazgos potencialmente bloqueantes y clasifícalos como aceptados, descartados o diferidos. Crea docs/reviews/<cambio>-fix-brief.md con solo los aceptados, usando la plantilla: evidencia reproducible, comportamiento esperado, regresión requerida, alcance permitido y no-objetivos. No modifiques código.
+```
+
+Un informe de Convoy es evidencia para decidir; no es una orden de modificar el diff.
 
 ### 5. Cierre
 
@@ -131,7 +177,24 @@ convoy --change <cambio> --pipeline fixer \
   --prompt-file docs/reviews/<cambio>-fix-brief.md \
   --file docs/decisions/<adr-relevante>.md \
   --file evals/<suite-relevante>.yaml --plan
+```
 
+Tras aceptar el plan, ejecuta la corrección y vuelve a pasar el gate de endurecimiento si el cambio afecta al comportamiento, seguridad, datos o evaluaciones:
+
+```sh
+# Corrige solo los hallazgos aceptados en el fix brief.
+convoy --change <cambio> --pipeline fixer \
+  --prompt-file docs/reviews/<cambio>-fix-brief.md \
+  --file docs/decisions/<adr-relevante>.md \
+  --file evals/<suite-relevante>.yaml
+```
+
+```text
+# Repite tests, validación y review sin modificar el código.
+/harden-change Verifica el cambio OpenSpec <cambio> ya corregido. No modifiques código ni ejecutes ship.
+```
+
+```sh
 # Mide y trata de cerrar la rama usando el contrato OpenSpec y sus adjuntos.
 convoy --change <cambio> --pipeline ship \
   --file docs/decisions/<adr-relevante>.md \
@@ -140,11 +203,19 @@ convoy --change <cambio> --pipeline ship \
 git diff --check
 ```
 
-Tras revisar el plan, ejecuta `fixer` de nuevo sin `--plan`. `fixer` debe demostrar cada problema con una prueba de regresión antes de cambiar producción. `ship` valida el estado final contra la base y prepara la evidencia de cierre; no reemplaza la aprobación humana ni la CI de la merge request.
+`fixer` debe demostrar cada problema con una prueba de regresión antes de cambiar producción. `ship` valida el estado final contra la base y prepara la evidencia de cierre; no reemplaza la aprobación humana ni la CI de la merge request.
 
 ## Ejemplo completo: fallback seguro para una respuesta RAG
 
 **Situación:** el asistente de soporte responde aunque el retrieval no encuentre evidencia suficiente. El cambio debe devolver una respuesta de abstención y registrar la causa cuando la cobertura de evidencia sea baja. Afecta a comportamiento de usuario, evaluación, coste y observabilidad; por eso se usa el flujo completo.
+
+### 0. Aislar el trabajo
+
+```sh
+# El nombre incluye el ticket porque este repositorio lo exige.
+wt switch --create feat/ARS-123-rag-safe-abstention
+git status --short
+```
 
 ### 1. Encuadrar la decisión
 
@@ -177,6 +248,12 @@ Estos comandos abren un cambio OpenSpec con identidad estable y muestran los cam
 openspec new rag-safe-abstention
 # Muestra el cambio recién creado junto a los demás cambios activos.
 openspec status
+```
+
+Con las conclusiones ya acordadas, el agente completa los artefactos sin implementar:
+
+```text
+/prepare-change Usa las conclusiones de la sesión de grill para preparar el cambio OpenSpec rag-safe-abstention. Incluye el ADR de abstención, criterios de aceptación por segmento, evaluación, telemetría, rollback y presupuesto de coste/latencia. No implementes código ni ejecutes Convoy.
 ```
 
 El directorio `openspec/changes/rag-safe-abstention/` contiene, como mínimo:

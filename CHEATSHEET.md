@@ -118,6 +118,8 @@ Para cambios AI relevantes, ejecuta también `openspec validate --help` para ele
 
 Las invocaciones de Matt Pocock aparecen solo si fueron seleccionadas durante la instalación de [Skills for Real Engineers](catalog/agent-extensions/skills/skills-for-real-engineers.md). Para instalar o actualizar esa colección: `npx skills@latest add mattpocock/skills`. Las skills locales [`/prepare-change`](catalog/agent-extensions/skills/prepare-change.md) y [`/harden-change`](catalog/agent-extensions/skills/harden-change.md) se instalan por separado en OpenCode.
 
+Para la ruta completa —worktree, *grill*, OpenSpec, Convoy, triage y cierre— consulta el [workflow de cambio Staff AI](playbook/staff-ai-change-workflow.md). Para ejecutarla desde un ticket, usa el [runbook copy-paste de cambio Jira](playbook/templates/jira-change-runbook-template.md). La plantilla del puente entre `review` y `fixer` es el [fix brief](playbook/templates/fix-brief-template.md).
+
 ## Agentes de código
 
 | Comando | Para qué sirve |
